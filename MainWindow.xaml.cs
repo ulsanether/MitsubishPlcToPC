@@ -8,18 +8,22 @@ using ActUtlTypeLib;
 
 namespace MitsubishiPlcToPC
 {
+    public class ConnectionSettings
+    {
+
+        public int LogicalStationNumber { get; set; } = 1;
+
+        public string PlcType { get; set; } = "Q Series";
+        public string StationNumber { get; set; } = "0";
+    }
     public partial class MainWindow : Window
     {
-        // MX Component ActUtlType
         private ActUtlType plc;
 
-        // Timer for auto refresh
         private DispatcherTimer autoRefreshTimer;
 
-        // Connection settings
         private ConnectionSettings settings;
 
-        // Data collections
         private ObservableCollection<PlcAddress> w100Data;
         private ObservableCollection<PlcAddress> y1000Data;
         private ObservableCollection<PlcAddress> w0Data;
@@ -31,154 +35,88 @@ namespace MitsubishiPlcToPC
         {
             InitializeComponent();
 
-            // Initialize PLC object
             plc = new ActUtlType();
 
-            // Initialize timer
-            autoRefreshTimer = new DispatcherTimer();
-            autoRefreshTimer.Interval = TimeSpan.FromSeconds(1);
+            autoRefreshTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(2) // 실시간 모니터링에 적합한 간격
+            };
             autoRefreshTimer.Tick += AutoRefreshTimer_Tick;
 
-            // Initialize default settings
             settings = new ConnectionSettings
             {
-                ConnectionType = "Ethernet",
-                IpAddress = "192.168.1.100",
-                Port = "5000",
-                PlcType = "Q Series"
+                PlcType = "Q Series",
+                StationNumber = "0"
             };
 
-            // Initialize data
             InitializeDataGrids();
         }
 
+
         private void InitializeDataGrids()
         {
-            // W100-W110 (PLC → 로봇)
-            w100Data = new ObservableCollection<PlcAddress>
-            {
-                new PlcAddress { Address = "W100", Description = "인덱스 홀더 체결(1~8)", Value = 0 },
-                new PlcAddress { Address = "W101", Description = "인덱스 홀더 체결(9~16)", Value = 0 },
-                new PlcAddress { Address = "W102", Description = "인덱스 현재 번호", Value = 0 },
-                new PlcAddress { Address = "W103", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "W104", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "W105", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "W106", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "W107", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "W108", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "W109", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "W110", Description = "예비", Value = 0 }
-            };
+            w100Data = CreatePlcAddressCollection(
+                new[] { "W100", "W101", "W102", "W103", "W104", "W105", "W106", "W107", "W108", "W109", "W110" },
+                new[] { "인덱스 홀더 체결(1~8)", "인덱스 홀더 체결(9~16)", "인덱스 현재 번호", "예비", "예비", "예비", "예비", "예비", "예비", "예비", "예비" }
+            );
             W100Grid.ItemsSource = w100Data;
 
-            // Y1000-Y1010 (PLC → 로봇 ATC)
-            y1000Data = new ObservableCollection<PlcAddress>
-            {
-                new PlcAddress { Address = "Y1000", Description = "ATC IN 위치확인", Value = 0 },
-                new PlcAddress { Address = "Y1001", Description = "ATC OUT 위치확인", Value = 0 },
-                new PlcAddress { Address = "Y1002", Description = "ATC 준비", Value = 0 },
-                new PlcAddress { Address = "Y1003", Description = "ATC 에러", Value = 0 },
-                new PlcAddress { Address = "Y1004", Description = "ATC 회전중", Value = 0 },
-                new PlcAddress { Address = "Y1005", Description = "ATC 회전완료", Value = 0 },
-                new PlcAddress { Address = "Y1006", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "Y1007", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "Y1008", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "Y1009", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "Y1010", Description = "예비", Value = 0 }
-            };
+            y1000Data = CreatePlcAddressCollection(
+                new[] { "Y1000", "Y1001", "Y1002", "Y1003", "Y1004", "Y1005", "Y1006", "Y1007", "Y1008", "Y1009", "Y1010" },
+                new[] { "ATC IN 위치확인", "ATC OUT 위치확인", "ATC 준비", "ATC 에러", "ATC 회전중", "ATC 회전완료", "예비", "예비", "예비", "예비", "예비" }
+            );
             Y1000Grid.ItemsSource = y1000Data;
 
-            // W0-W10 (로봇 → PLC)
-            w0Data = new ObservableCollection<PlcAddress>
-            {
-                new PlcAddress { Address = "W0", Description = "인덱스 회전 번호", Value = 0 },
-                new PlcAddress { Address = "W1", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "W2", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "W3", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "W4", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "W5", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "W6", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "W7", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "W8", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "W9", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "W10", Description = "예비", Value = 0 }
-            };
+            w0Data = CreatePlcAddressCollection(
+                new[] { "W0", "W1", "W2", "W3", "W4", "W5", "W6", "W7", "W8", "W9", "W10" },
+                new[] { "인덱스 회전 번호", "예비", "예비", "예비", "예비", "예비", "예비", "예비", "예비", "예비", "예비" }
+            );
             W0Grid.ItemsSource = w0Data;
 
-            // X1000-X1010 (로봇 → PLC ATC)
-            x1000Data = new ObservableCollection<PlcAddress>
-            {
-                new PlcAddress { Address = "X1000", Description = "ATC IN 이송요구", Value = 0 },
-                new PlcAddress { Address = "X1001", Description = "ATC OUT 이송요구", Value = 0 },
-                new PlcAddress { Address = "X1002", Description = "ATC 회전 요구", Value = 0 },
-                new PlcAddress { Address = "X1003", Description = "ATC 에러 리셋 요구", Value = 0 },
-                new PlcAddress { Address = "X1004", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "X1005", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "X1006", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "X1007", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "X1008", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "X1009", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "X1010", Description = "예비", Value = 0 }
-            };
+            x1000Data = CreatePlcAddressCollection(
+                new[] { "X1000", "X1001", "X1002", "X1003", "X1004", "X1005", "X1006", "X1007", "X1008", "X1009", "X1010" },
+                new[] { "ATC IN 이송요구", "ATC OUT 이송요구", "ATC 회전 요구", "ATC 에러 리셋 요구", "예비", "예비", "예비", "예비", "예비", "예비", "예비" }
+            );
             X1000Grid.ItemsSource = x1000Data;
 
-            // D1000-D1010 (PLC ↔ PC)
-            d1000Data = new ObservableCollection<PlcAddress>
-            {
-                new PlcAddress { Address = "D1000", Description = "버전번호", Value = 0 },
-                new PlcAddress { Address = "D1001", Description = "인덱스 홀더 체결확인", Value = 0 },
-                new PlcAddress { Address = "D1002", Description = "인덱스 현재 번호", Value = 0 },
-                new PlcAddress { Address = "D1003", Description = "ATC IN, OUT 위치확인(0:IN, 1:OUT)", Value = 0 },
-                new PlcAddress { Address = "D1004", Description = "ATC 준비완료(0:준비,1:회전가능)", Value = 0 },
-                new PlcAddress { Address = "D1005", Description = "ATC 에러코드(0:정상, 1:에러)", Value = 0 },
-                new PlcAddress { Address = "D1006", Description = "ATC 상태코드(0:회전중, 1:회전완료)", Value = 0 },
-                new PlcAddress { Address = "D1007", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "D1008", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "D1009", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "D1010", Description = "예비", Value = 0 }
-            };
+            d1000Data = CreatePlcAddressCollection(
+                new[] { "D1000", "D1001", "D1002", "D1003", "D1004", "D1005", "D1006", "D1007", "D1008", "D1009", "D1010" },
+                new[] { "버전번호", "인덱스 홀더 체결확인", "인덱스 현재 번호", "ATC IN, OUT 위치확인(0:IN, 1:OUT)", "ATC 준비완료(0:준비,1:회전가능)", "ATC 에러코드(0:정상, 1:에러)", "ATC 상태코드(0:회전중, 1:회전완료)", "예비", "예비", "예비", "예비" }
+            );
             D1000Grid.ItemsSource = d1000Data;
 
-            // D1011-D1021 (PC → PLC)
-            d1011Data = new ObservableCollection<PlcAddress>
-            {
-                new PlcAddress { Address = "D1011", Description = "인덱스 회전 번호", Value = 0 },
-                new PlcAddress { Address = "D1012", Description = "ATC IN 명령", Value = 0 },
-                new PlcAddress { Address = "D1013", Description = "ATC OUT 명령", Value = 0 },
-                new PlcAddress { Address = "D1014", Description = "ATC 회전요구", Value = 0 },
-                new PlcAddress { Address = "D1015", Description = "ATC 에러리셋요구", Value = 0 },
-                new PlcAddress { Address = "D1016", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "D1017", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "D1018", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "D1019", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "D1020", Description = "예비", Value = 0 },
-                new PlcAddress { Address = "D1021", Description = "예비", Value = 0 }
-            };
+            d1011Data = CreatePlcAddressCollection(
+                new[] { "D1011", "D1012", "D1013", "D1014", "D1015", "D1016", "D1017", "D1018", "D1019", "D1020", "D1021" },
+                new[] { "인덱스 회전 번호", "ATC IN 명령", "ATC OUT 명령", "ATC 회전요구", "ATC 에러리셋요구", "예비", "예비", "예비", "예비", "예비", "예비" }
+            );
             D1011Grid.ItemsSource = d1011Data;
         }
 
-        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        // 공통 생성 함수 추가
+        private ObservableCollection<PlcAddress> CreatePlcAddressCollection(string[] addresses, string[] descriptions)
         {
-            ConnectionSettingsWindow settingsWindow = new ConnectionSettingsWindow(settings);
-            if (settingsWindow.ShowDialog() == true)
+            var collection = new ObservableCollection<PlcAddress>();
+            for (int i = 0; i < addresses.Length; i++)
             {
-                settings = settingsWindow.Settings;
+                collection.Add(new PlcAddress
+                {
+                    Address = addresses[i],
+                    Description = descriptions[i],
+                    Value = 0
+                });
             }
+            return collection;
         }
 
         private void ConnectButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                // Set ActLogicalStationNumber
                 plc.ActLogicalStationNumber = int.Parse(settings.StationNumber);
-
-                // Open connection
                 int result = plc.Open();
 
                 if (result == 0)
                 {
-                    // Success
                     StatusIndicator.Fill = new SolidColorBrush(Colors.Green);
                     StatusText.Text = "PLC 연결됨";
                     StatusText.Foreground = new SolidColorBrush(Colors.Green);
@@ -193,16 +131,6 @@ namespace MitsubishiPlcToPC
                     ConnectionInfo.Visibility = Visibility.Visible;
                     PlcTypeText.Text = $"PLC Type: {settings.PlcType}";
 
-                    if (settings.ConnectionType == "Ethernet")
-                    {
-                        ConnectionDetailsText.Text = $"{settings.IpAddress}:{settings.Port}";
-                    }
-                    else
-                    {
-                        ConnectionDetailsText.Text = $"{settings.SerialPort} - {settings.BaudRate}bps";
-                    }
-
-                    // Initial read
                     ReadAllData();
 
                     MessageBox.Show("PLC 연결 성공!", "연결 성공", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -217,6 +145,7 @@ namespace MitsubishiPlcToPC
                 MessageBox.Show($"연결 중 오류 발생:\n{ex.Message}", "오류", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
 
         private void DisconnectButton_Click(object sender, RoutedEventArgs e)
         {
@@ -265,19 +194,15 @@ namespace MitsubishiPlcToPC
         {
             try
             {
-                // Read W addresses
                 ReadWordDevices(w100Data, "W", 100);
                 ReadWordDevices(w0Data, "W", 0);
 
-                // Read D addresses
                 ReadWordDevices(d1000Data, "D", 1000);
                 ReadWordDevices(d1011Data, "D", 1011);
 
-                // Read X/Y bit devices
                 ReadBitDevices(x1000Data, "X", 1000);
                 ReadBitDevices(y1000Data, "Y", 1000);
 
-                // Update status displays
                 UpdateStatusDisplays();
             }
             catch (Exception ex)
@@ -289,8 +214,7 @@ namespace MitsubishiPlcToPC
         private void ReadWordDevices(ObservableCollection<PlcAddress> collection, string deviceType, int startAddress)
         {
             int size = collection.Count;
-            short[] values = new short[size];
-
+            int[] values = new int[size];
             int result = plc.ReadDeviceBlock($"{deviceType}{startAddress}", size, out values[0]);
 
             if (result == 0)
@@ -302,11 +226,12 @@ namespace MitsubishiPlcToPC
             }
         }
 
+
         private void ReadBitDevices(ObservableCollection<PlcAddress> collection, string deviceType, int startAddress)
         {
             for (int i = 0; i < collection.Count; i++)
             {
-                short value;
+                int value;
                 int result = plc.GetDevice($"{deviceType}{startAddress + i}", out value);
 
                 if (result == 0)
@@ -379,7 +304,7 @@ namespace MitsubishiPlcToPC
             System.Threading.Tasks.Task.Delay(500).ContinueWith(_ =>
             {
                 Dispatcher.Invoke(() => WriteDevice("D1013", 0));
-            });
+              });
         }
 
         private void AtcRotateButton_Click(object sender, RoutedEventArgs e)

@@ -1,157 +1,297 @@
-﻿<Window x:Class="MitsubishiPlcToPC.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d"
-        Title="Mitsubishi PLC 제어 시스템" Height="800" Width="1400"
-        WindowStartupLocation="CenterScreen">
+﻿<Window
+    x:Class="MitsubishiPlcToPC.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Mitsubishi PLC 제어 시스템"
+    Width="1400"
+    Height="800"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
 
     <Window.Resources>
         <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="White" />
         </Style>
 
         <Style x:Key="GroupBoxStyle" TargetType="GroupBox">
-            <Setter Property="Margin" Value="5"/>
-            <Setter Property="Padding" Value="10"/>
-            <Setter Property="BorderBrush" Value="#2196F3"/>
-            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="BorderBrush" Value="#1E88E5" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="Foreground" Value="#E0E0E0" />
+            <Setter Property="Background" Value="#2D2D30" />
+        </Style>
+
+        <Style TargetType="DataGrid">
+            <Setter Property="Background" Value="#252526" />
+            <Setter Property="Foreground" Value="#E0E0E0" />
+            <Setter Property="BorderBrush" Value="#3F3F46" />
+            <Setter Property="RowBackground" Value="#2D2D30" />
+            <Setter Property="AlternatingRowBackground" Value="#252526" />
+            <Setter Property="GridLinesVisibility" Value="None" />
+            <Setter Property="HeadersVisibility" Value="Column" />
+        </Style>
+
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#1E1E1E" />
+            <Setter Property="Foreground" Value="#E0E0E0" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Padding" Value="8,5" />
+            <Setter Property="BorderBrush" Value="#3F3F46" />
+            <Setter Property="BorderThickness" Value="0,0,1,1" />
+        </Style>
+
+        <Style TargetType="DataGridCell">
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="8,5" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="#E0E0E0" />
         </Style>
     </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="60"/>
-            <RowDefinition Height="80"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="60" />
+            <RowDefinition Height="80" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- 헤더 -->
-        <Border Grid.Row="0" Background="#2196F3">
+        <!--  헤더  -->
+        <Border Grid.Row="0" Background="#1E88E5">
             <Grid Margin="20,0">
                 <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="Mitsubishi PLC 제어 시스템" Style="{StaticResource HeaderTextStyle}"/>
-                    <TextBlock Text="MX Component Interface" FontSize="11" Foreground="#E3F2FD" Margin="0,2,0,0"/>
+                    <TextBlock Style="{StaticResource HeaderTextStyle}" Text="Mitsubishi PLC 제어 시스템" />
+                    <TextBlock
+                        Margin="0,2,0,0"
+                        FontSize="11"
+                        Foreground="#B3E5FC"
+                        Text="MX Component Interface" />
                 </StackPanel>
             </Grid>
         </Border>
 
-        <!-- 연결 패널 -->
-        <Border Grid.Row="1" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1">
+        <!--  연결 패널  -->
+        <Border
+            Grid.Row="1"
+            Background="#2D2D30"
+            BorderBrush="#3F3F46"
+            BorderThickness="0,0,0,1">
             <Grid Margin="20,10">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Ellipse Width="12" Height="12" x:Name="StatusIndicator" Fill="Gray" Margin="0,0,10,0"/>
+                <StackPanel
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                    <Ellipse
+                        x:Name="StatusIndicator"
+                        Width="12"
+                        Height="12"
+                        Margin="0,0,10,0"
+                        Fill="#6E6E6E" />
                     <StackPanel>
-                        <TextBlock Text="연결 상태" FontSize="11" Foreground="Gray"/>
-                        <TextBlock x:Name="StatusText" Text="연결 안됨" FontSize="14" FontWeight="SemiBold"/>
+                        <TextBlock
+                            FontSize="11"
+                            Foreground="#9E9E9E"
+                            Text="연결 상태" />
+                        <TextBlock
+                            x:Name="StatusText"
+                            FontSize="14"
+                            FontWeight="SemiBold"
+                            Foreground="#E0E0E0"
+                            Text="연결 안됨" />
                     </StackPanel>
 
-                    <StackPanel Margin="30,0,0,0" x:Name="ConnectionInfo" Visibility="Collapsed">
-                        <TextBlock x:Name="PlcTypeText" Text="PLC Type: Q Series" FontSize="11" Foreground="Gray"/>
-                        <TextBlock x:Name="ConnectionDetailsText" Text="192.168.1.100:5000" FontSize="11" Foreground="Gray"/>
+                    <StackPanel
+                        x:Name="ConnectionInfo"
+                        Margin="30,0,0,0"
+                        Visibility="Collapsed">
+                        <TextBlock
+                            x:Name="PlcTypeText"
+                            FontSize="11"
+                            Foreground="#9E9E9E"
+                            Text="PLC Type: Q Series" />
+                        <TextBlock
+                            x:Name="ConnectionDetailsText"
+                            FontSize="11"
+                            Foreground="#9E9E9E"
+                            Text="192.168.1.100:5000" />
                     </StackPanel>
                 </StackPanel>
 
-                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <CheckBox x:Name="AutoRefreshCheckBox" Content="자동 갱신" 
-                              VerticalAlignment="Center" Margin="0,0,10,0"
-                              Checked="AutoRefreshCheckBox_Checked"
-                              Unchecked="AutoRefreshCheckBox_Unchecked"
-                              IsEnabled="False"/>
+                <StackPanel
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+                    <CheckBox
+                        x:Name="AutoRefreshCheckBox"
+                        Margin="0,0,10,0"
+                        VerticalAlignment="Center"
+                        Checked="AutoRefreshCheckBox_Checked"
+                        Content="자동 갱신"
+                        Foreground="#E0E0E0"
+                        IsEnabled="False"
+                        Unchecked="AutoRefreshCheckBox_Unchecked" />
 
-                    <Button x:Name="SettingsButton" Content="통신 설정" 
-                            Width="100" Height="35" Margin="5,0"
-                            Click="SettingsButton_Click"/>
+                    <Button
+                        x:Name="ConnectButton"
+                        Width="100"
+                        Height="35"
+                        Margin="5,0"
+                        Background="#43A047"
+                        BorderBrush="#43A047"
+                        Click="ConnectButton_Click"
+                        Content="PLC 연결"
+                        Foreground="White" />
 
-                    <Button x:Name="ConnectButton" Content="PLC 연결" 
-                            Width="100" Height="35" Margin="5,0"
-                            Background="#4CAF50" Foreground="White"
-                            Click="ConnectButton_Click"/>
-
-                    <Button x:Name="DisconnectButton" Content="연결 해제" 
-                            Width="100" Height="35" Margin="5,0"
-                            Background="#F44336" Foreground="White"
-                            Click="DisconnectButton_Click"
-                            IsEnabled="False"/>
+                    <Button
+                        x:Name="DisconnectButton"
+                        Width="100"
+                        Height="35"
+                        Margin="5,0"
+                        Background="#E53935"
+                        BorderBrush="#E53935"
+                        Click="DisconnectButton_Click"
+                        Content="연결 해제"
+                        Foreground="Black"
+                        IsEnabled="False" />
                 </StackPanel>
             </Grid>
         </Border>
 
-        <!-- 메인 컨텐츠 -->
-        <Grid Grid.Row="2" Background="#F5F5F5">
-            <!-- 시작 화면 -->
+        <!--  메인 컨텐츠  -->
+        <Grid Grid.Row="2" Background="#1E1E1E">
+            <!--  시작 화면  -->
             <Grid x:Name="WelcomeScreen" Visibility="Visible">
-                <Border Background="White" MaxWidth="600" MaxHeight="350" 
-                        CornerRadius="10" Margin="50"
-                        HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Border
+                    MaxWidth="600"
+                    MaxHeight="350"
+                    Margin="50"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="#2D2D30"
+                    BorderBrush="#3F3F46"
+                    BorderThickness="1"
+                    CornerRadius="10">
                     <Border.Effect>
-                        <DropShadowEffect BlurRadius="20" ShadowDepth="2" Opacity="0.3"/>
+                        <DropShadowEffect
+                            BlurRadius="20"
+                            Opacity="0.5"
+                            ShadowDepth="2"
+                            Color="Black" />
                     </Border.Effect>
 
                     <StackPanel Margin="40">
-                        <Ellipse Width="80" Height="80" Fill="#E3F2FD" 
-                                 HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                        <Ellipse
+                            Width="80"
+                            Height="80"
+                            Margin="0,0,0,20"
+                            HorizontalAlignment="Center"
+                            Fill="#1E88E5" />
 
-                        <TextBlock Text="Mitsubishi PLC 제어 시스템" 
-                                   FontSize="22" FontWeight="Bold" 
-                                   TextAlignment="Center" Margin="0,0,0,15"/>
-
-                        <TextBlock Text="통신 설정 후 PLC에 연결하세요" 
-                                   FontSize="14" Foreground="Gray"
-                                   TextAlignment="Center" Margin="0,0,0,50"/>
+                        <TextBlock
+                            Margin="0,0,0,15"
+                            FontSize="22"
+                            FontWeight="Bold"
+                            Foreground="#E0E0E0"
+                            Text="Mitsubishi PLC 제어 시스템"
+                            TextAlignment="Center" />
 
                         <StackPanel>
-                            <TextBlock Text="지원 주소 범위" FontWeight="Bold" 
-                                       TextAlignment="Center" Margin="0,0,0,15"/>
+                            <TextBlock
+                                Margin="0,0,0,15"
+                                FontWeight="Bold"
+                                Foreground="#E0E0E0"
+                                Text="지원 주소 범위"
+                                TextAlignment="Center" />
 
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <StackPanel Grid.Column="0" Background="#F5F5F5" 
-                                            Margin="3" >
-                                    <TextBlock Text="W 주소" Foreground="Gray" 
-                                               FontSize="10" Margin="0,0,0,3"/>
-                                    <TextBlock Text="W0-W10" 
-                                               FontFamily="Consolas" FontSize="10" FontWeight="Bold"/>
-                                    <TextBlock Text="W100-W110" 
-                                               FontFamily="Consolas" FontSize="10" FontWeight="Bold"/>
+                                <StackPanel
+                                    Grid.Column="0"
+                                    Margin="3"
+                                    Background="#1E1E1E">
+                                    <TextBlock
+                                        Margin="0,0,0,3"
+                                        FontSize="10"
+                                        Foreground="#9E9E9E"
+                                        Text="W 주소" />
+                                    <TextBlock
+                                        FontFamily="Consolas"
+                                        FontSize="10"
+                                        FontWeight="Bold"
+                                        Foreground="#E0E0E0"
+                                        Text="W0-W10" />
+                                    <TextBlock
+                                        FontFamily="Consolas"
+                                        FontSize="10"
+                                        FontWeight="Bold"
+                                        Foreground="#E0E0E0"
+                                        Text="W100-W110" />
                                 </StackPanel>
 
-                                <StackPanel Grid.Column="1" Background="#F5F5F5" 
-                                            Margin="3" >
-                                    <TextBlock Text="X 주소" Foreground="Gray" 
-                                               FontSize="10" Margin="0,0,0,3"/>
-                                    <TextBlock Text="X1000-X1010" 
-                                               FontFamily="Consolas" FontSize="10" FontWeight="Bold"/>
+                                <StackPanel
+                                    Grid.Column="1"
+                                    Margin="3"
+                                    Background="#1E1E1E">
+                                    <TextBlock
+                                        Margin="0,0,0,3"
+                                        FontSize="10"
+                                        Foreground="#9E9E9E"
+                                        Text="X 주소" />
+                                    <TextBlock
+                                        FontFamily="Consolas"
+                                        FontSize="10"
+                                        FontWeight="Bold"
+                                        Foreground="#E0E0E0"
+                                        Text="X1000-X1010" />
                                 </StackPanel>
 
-                                <StackPanel Grid.Column="2" Background="#F5F5F5" 
-                                            Margin="3" >
-                                    <TextBlock Text="Y 주소" Foreground="Gray" 
-                                               FontSize="10" Margin="0,0,0,3"/>
-                                    <TextBlock Text="Y1000-Y1010" 
-                                               FontFamily="Consolas" FontSize="10" FontWeight="Bold"/>
+                                <StackPanel
+                                    Grid.Column="2"
+                                    Margin="3"
+                                    Background="#1E1E1E">
+                                    <TextBlock
+                                        Margin="0,0,0,3"
+                                        FontSize="10"
+                                        Foreground="#9E9E9E"
+                                        Text="Y 주소" />
+                                    <TextBlock
+                                        FontFamily="Consolas"
+                                        FontSize="10"
+                                        FontWeight="Bold"
+                                        Foreground="#E0E0E0"
+                                        Text="Y1000-Y1010" />
                                 </StackPanel>
 
-                                <StackPanel Grid.Column="3" Background="#F5F5F5" 
-                                            Margin="3" >
-                                    <TextBlock Text="D 주소" Foreground="Gray" 
-                                               FontSize="10" Margin="0,0,0,3"/>
-                                    <TextBlock Text="D1000-D1021" 
-                                               FontFamily="Consolas" FontSize="10" FontWeight="Bold"/>
+                                <StackPanel
+                                    Grid.Column="3"
+                                    Margin="3"
+                                    Background="#1E1E1E">
+                                    <TextBlock
+                                        Margin="0,0,0,3"
+                                        FontSize="10"
+                                        Foreground="#9E9E9E"
+                                        Text="D 주소" />
+                                    <TextBlock
+                                        FontFamily="Consolas"
+                                        FontSize="10"
+                                        FontWeight="Bold"
+                                        Foreground="#E0E0E0"
+                                        Text="D1000-D1021" />
                                 </StackPanel>
                             </Grid>
                         </StackPanel>
@@ -159,44 +299,72 @@
                 </Border>
             </Grid>
 
-            <!-- 모니터링 화면 -->
-            <ScrollViewer x:Name="MonitoringScreen" Visibility="Collapsed" 
-                          VerticalScrollBarVisibility="Auto">
+            <!--  모니터링 화면  -->
+            <ScrollViewer
+                x:Name="MonitoringScreen"
+                VerticalScrollBarVisibility="Auto"
+                Visibility="Collapsed">
                 <StackPanel Margin="10">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <!-- PLC → 로봇 (W100-W110) -->
-                        <GroupBox Grid.Column="0" Header="PLC → 로봇 (W100-W110)" 
-                                  Style="{StaticResource GroupBoxStyle}">
-                            <DataGrid x:Name="W100Grid" AutoGenerateColumns="False" 
-                                      CanUserAddRows="False" Height="300">
+                        <!--  PLC → 로봇 (W100-W110)  -->
+                        <GroupBox
+                            Grid.Column="0"
+                            Header="PLC → 로봇 (W100-W110)"
+                            Style="{StaticResource GroupBoxStyle}">
+                            <DataGrid
+                                x:Name="W100Grid"
+                                Height="300"
+                                AutoGenerateColumns="False"
+                                CanUserAddRows="False">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="주소" Binding="{Binding Address}" 
-                                                        Width="80" IsReadOnly="True"/>
-                                    <DataGridTextColumn Header="내용" Binding="{Binding Description}" 
-                                                        Width="*" IsReadOnly="True"/>
-                                    <DataGridTextColumn Header="값" Binding="{Binding Value}" 
-                                                        Width="100"/>
+                                    <DataGridTextColumn
+                                        Width="80"
+                                        Binding="{Binding Address}"
+                                        Header="주소"
+                                        IsReadOnly="True" />
+                                    <DataGridTextColumn
+                                        Width="*"
+                                        Binding="{Binding Description}"
+                                        Header="내용"
+                                        IsReadOnly="True" />
+                                    <DataGridTextColumn
+                                        Width="100"
+                                        Binding="{Binding Value}"
+                                        Header="값" />
                                 </DataGrid.Columns>
                             </DataGrid>
                         </GroupBox>
 
-                        <!-- PLC → 로봇 ATC (Y1000-Y1010) -->
-                        <GroupBox Grid.Column="1" Header="PLC → 로봇 ATC (Y1000-Y1010)" 
-                                  Style="{StaticResource GroupBoxStyle}">
-                            <DataGrid x:Name="Y1000Grid" AutoGenerateColumns="False" 
-                                      CanUserAddRows="False" Height="300">
+                        <!--  PLC → 로봇 ATC (Y1000-Y1010)  -->
+                        <GroupBox
+                            Grid.Column="1"
+                            Header="PLC → 로봇 ATC (Y1000-Y1010)"
+                            Style="{StaticResource GroupBoxStyle}">
+                            <DataGrid
+                                x:Name="Y1000Grid"
+                                Height="300"
+                                AutoGenerateColumns="False"
+                                CanUserAddRows="False">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="주소" Binding="{Binding Address}" 
-                                                        Width="80" IsReadOnly="True"/>
-                                    <DataGridTextColumn Header="내용" Binding="{Binding Description}" 
-                                                        Width="*" IsReadOnly="True"/>
-                                    <DataGridTextColumn Header="값" Binding="{Binding Value}" 
-                                                        Width="100"/>
+                                    <DataGridTextColumn
+                                        Width="80"
+                                        Binding="{Binding Address}"
+                                        Header="주소"
+                                        IsReadOnly="True" />
+                                    <DataGridTextColumn
+                                        Width="*"
+                                        Binding="{Binding Description}"
+                                        Header="내용"
+                                        IsReadOnly="True" />
+                                    <DataGridTextColumn
+                                        Width="100"
+                                        Binding="{Binding Value}"
+                                        Header="값" />
                                 </DataGrid.Columns>
                             </DataGrid>
                         </GroupBox>
@@ -204,38 +372,64 @@
 
                     <Grid Margin="0,10,0,0">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <!-- 로봇 → PLC (W0-W10) -->
-                        <GroupBox Grid.Column="0" Header="로봇 → PLC (W0-W10)" 
-                                  Style="{StaticResource GroupBoxStyle}">
-                            <DataGrid x:Name="W0Grid" AutoGenerateColumns="False" 
-                                      CanUserAddRows="False" Height="300">
+                        <!--  로봇 → PLC (W0-W10)  -->
+                        <GroupBox
+                            Grid.Column="0"
+                            Header="로봇 → PLC (W0-W10)"
+                            Style="{StaticResource GroupBoxStyle}">
+                            <DataGrid
+                                x:Name="W0Grid"
+                                Height="300"
+                                AutoGenerateColumns="False"
+                                CanUserAddRows="False">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="주소" Binding="{Binding Address}" 
-                                                        Width="80" IsReadOnly="True"/>
-                                    <DataGridTextColumn Header="내용" Binding="{Binding Description}" 
-                                                        Width="*" IsReadOnly="True"/>
-                                    <DataGridTextColumn Header="값" Binding="{Binding Value}" 
-                                                        Width="100"/>
+                                    <DataGridTextColumn
+                                        Width="80"
+                                        Binding="{Binding Address}"
+                                        Header="주소"
+                                        IsReadOnly="True" />
+                                    <DataGridTextColumn
+                                        Width="*"
+                                        Binding="{Binding Description}"
+                                        Header="내용"
+                                        IsReadOnly="True" />
+                                    <DataGridTextColumn
+                                        Width="100"
+                                        Binding="{Binding Value}"
+                                        Header="값" />
                                 </DataGrid.Columns>
                             </DataGrid>
                         </GroupBox>
 
-                        <!-- 로봇 → PLC ATC (X1000-X1010) -->
-                        <GroupBox Grid.Column="1" Header="로봇 → PLC ATC (X1000-X1010)" 
-                                  Style="{StaticResource GroupBoxStyle}">
-                            <DataGrid x:Name="X1000Grid" AutoGenerateColumns="False" 
-                                      CanUserAddRows="False" Height="300">
+                        <!--  로봇 → PLC ATC (X1000-X1010)  -->
+                        <GroupBox
+                            Grid.Column="1"
+                            Header="로봇 → PLC ATC (X1000-X1010)"
+                            Style="{StaticResource GroupBoxStyle}">
+                            <DataGrid
+                                x:Name="X1000Grid"
+                                Height="300"
+                                AutoGenerateColumns="False"
+                                CanUserAddRows="False">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="주소" Binding="{Binding Address}" 
-                                                        Width="80" IsReadOnly="True"/>
-                                    <DataGridTextColumn Header="내용" Binding="{Binding Description}" 
-                                                        Width="*" IsReadOnly="True"/>
-                                    <DataGridTextColumn Header="값" Binding="{Binding Value}" 
-                                                        Width="100"/>
+                                    <DataGridTextColumn
+                                        Width="80"
+                                        Binding="{Binding Address}"
+                                        Header="주소"
+                                        IsReadOnly="True" />
+                                    <DataGridTextColumn
+                                        Width="*"
+                                        Binding="{Binding Description}"
+                                        Header="내용"
+                                        IsReadOnly="True" />
+                                    <DataGridTextColumn
+                                        Width="100"
+                                        Binding="{Binding Value}"
+                                        Header="값" />
                                 </DataGrid.Columns>
                             </DataGrid>
                         </GroupBox>
@@ -243,193 +437,330 @@
 
                     <Grid Margin="0,10,0,0">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <!-- PLC ↔ PC (D1000-D1010) -->
-                        <GroupBox Grid.Column="0" Header="PLC ↔ PC (D1000-D1010)" 
-                                  Style="{StaticResource GroupBoxStyle}">
-                            <DataGrid x:Name="D1000Grid" AutoGenerateColumns="False" 
-                                      CanUserAddRows="False" Height="300">
+                        <!--  PLC ↔ PC (D1000-D1010)  -->
+                        <GroupBox
+                            Grid.Column="0"
+                            Header="PLC ↔ PC (D1000-D1010)"
+                            Style="{StaticResource GroupBoxStyle}">
+                            <DataGrid
+                                x:Name="D1000Grid"
+                                Height="300"
+                                AutoGenerateColumns="False"
+                                CanUserAddRows="False">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="주소" Binding="{Binding Address}" 
-                                                        Width="80" IsReadOnly="True"/>
-                                    <DataGridTextColumn Header="내용" Binding="{Binding Description}" 
-                                                        Width="*" IsReadOnly="True"/>
-                                    <DataGridTextColumn Header="값" Binding="{Binding Value}" 
-                                                        Width="100"/>
+                                    <DataGridTextColumn
+                                        Width="80"
+                                        Binding="{Binding Address}"
+                                        Header="주소"
+                                        IsReadOnly="True" />
+                                    <DataGridTextColumn
+                                        Width="*"
+                                        Binding="{Binding Description}"
+                                        Header="내용"
+                                        IsReadOnly="True" />
+                                    <DataGridTextColumn
+                                        Width="100"
+                                        Binding="{Binding Value}"
+                                        Header="값" />
                                 </DataGrid.Columns>
                             </DataGrid>
                         </GroupBox>
 
-                        <!-- PC → PLC (D1011-D1021) -->
-                        <GroupBox Grid.Column="1" Header="PC → PLC (D1011-D1021)" 
-                                  Style="{StaticResource GroupBoxStyle}">
-                            <DataGrid x:Name="D1011Grid" AutoGenerateColumns="False" 
-                                      CanUserAddRows="False" Height="300">
+                        <!--  PC → PLC (D1011-D1021)  -->
+                        <GroupBox
+                            Grid.Column="1"
+                            Header="PC → PLC (D1011-D1021)"
+                            Style="{StaticResource GroupBoxStyle}">
+                            <DataGrid
+                                x:Name="D1011Grid"
+                                Height="300"
+                                AutoGenerateColumns="False"
+                                CanUserAddRows="False">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="주소" Binding="{Binding Address}" 
-                                                        Width="80" IsReadOnly="True"/>
-                                    <DataGridTextColumn Header="내용" Binding="{Binding Description}" 
-                                                        Width="*" IsReadOnly="True"/>
-                                    <DataGridTextColumn Header="값" Binding="{Binding Value}" 
-                                                        Width="100"/>
+                                    <DataGridTextColumn
+                                        Width="80"
+                                        Binding="{Binding Address}"
+                                        Header="주소"
+                                        IsReadOnly="True" />
+                                    <DataGridTextColumn
+                                        Width="*"
+                                        Binding="{Binding Description}"
+                                        Header="내용"
+                                        IsReadOnly="True" />
+                                    <DataGridTextColumn
+                                        Width="100"
+                                        Binding="{Binding Value}"
+                                        Header="값" />
                                 </DataGrid.Columns>
                             </DataGrid>
                         </GroupBox>
                     </Grid>
 
-                    <!-- 제어 패널 -->
-                    <GroupBox Header="빠른 제어 패널" Style="{StaticResource GroupBoxStyle}" 
-                              Margin="5,10,5,5">
+                    <!--  제어 패널  -->
+                    <GroupBox
+                        Margin="5,10,5,5"
+                        Header="빠른 제어 패널"
+                        Style="{StaticResource GroupBoxStyle}">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <!-- ATC 제어 -->
-                            <Border Grid.Column="0" BorderBrush="#E0E0E0" 
-                                    BorderThickness="1" CornerRadius="5" 
-                                    Padding="15" Margin="5">
+                            <!--  ATC 제어  -->
+                            <Border
+                                Grid.Column="0"
+                                Margin="5"
+                                Padding="15"
+                                Background="#2D2D30"
+                                BorderBrush="#3F3F46"
+                                BorderThickness="1"
+                                CornerRadius="5">
                                 <StackPanel>
-                                    <TextBlock Text="ATC 제어" FontWeight="Bold" 
-                                               Margin="0,0,0,10"/>
+                                    <TextBlock
+                                        Margin="0,0,0,10"
+                                        FontWeight="Bold"
+                                        Foreground="#E0E0E0"
+                                        Text="ATC 제어" />
 
-                                    <Button Content="← ATC IN 명령" Height="35" 
-                                            Margin="0,5" Background="#2196F3" 
-                                            Foreground="White" Click="AtcInButton_Click"/>
+                                    <Button
+                                        Height="35"
+                                        Margin="0,5"
+                                        Background="#1E88E5"
+                                        BorderBrush="#1E88E5"
+                                        Click="AtcInButton_Click"
+                                        Content="← ATC IN 명령"
+                                        Foreground="White" />
 
-                                    <Button Content="ATC OUT 명령 →" Height="35" 
-                                            Margin="0,5" Background="#2196F3" 
-                                            Foreground="White" Click="AtcOutButton_Click"/>
+                                    <Button
+                                        Height="35"
+                                        Margin="0,5"
+                                        Background="#1E88E5"
+                                        BorderBrush="#1E88E5"
+                                        Click="AtcOutButton_Click"
+                                        Content="ATC OUT 명령 →"
+                                        Foreground="White" />
 
-                                    <Button Content="⟲ ATC 회전 요구" Height="35" 
-                                            Margin="0,5" Background="#4CAF50" 
-                                            Foreground="White" Click="AtcRotateButton_Click"/>
+                                    <Button
+                                        Height="35"
+                                        Margin="0,5"
+                                        Background="#43A047"
+                                        BorderBrush="#43A047"
+                                        Click="AtcRotateButton_Click"
+                                        Content="⟲ ATC 회전 요구"
+                                        Foreground="White" />
 
-                                    <Button Content="⚠ ATC 에러 리셋" Height="35" 
-                                            Margin="0,5" Background="#F44336" 
-                                            Foreground="White" Click="AtcResetButton_Click"/>
+                                    <Button
+                                        Height="35"
+                                        Margin="0,5"
+                                        Background="#E53935"
+                                        BorderBrush="#E53935"
+                                        Click="AtcResetButton_Click"
+                                        Content="⚠ ATC 에러 리셋"
+                                        Foreground="White" />
 
-                                    <!-- ATC 상태 -->
-                                    <Border BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" 
-                                            Padding="0,10,0,0" Margin="0,10,0,0">
+                                    <!--  ATC 상태  -->
+                                    <Border
+                                        Margin="0,10,0,0"
+                                        Padding="0,10,0,0"
+                                        BorderBrush="#3F3F46"
+                                        BorderThickness="0,1,0,0">
                                         <StackPanel>
-                                            <TextBlock Text="ATC 상태" FontSize="11" 
-                                                       Foreground="Gray" Margin="0,0,0,10"/>
+                                            <TextBlock
+                                                Margin="0,0,0,10"
+                                                FontSize="11"
+                                                Foreground="#9E9E9E"
+                                                Text="ATC 상태" />
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="*" />
                                                 </Grid.ColumnDefinitions>
                                                 <Grid.RowDefinitions>
-                                                    <RowDefinition Height="Auto"/>
-                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
 
-                                                <TextBlock Grid.Row="0" Grid.Column="0" 
-                                                           x:Name="AtcReadyStatus" 
-                                                           Text="준비: 대기" 
-                                                           Background="#F5F5F5" Padding="5" 
-                                                           Margin="2" FontSize="10"/>
+                                                <TextBlock
+                                                    x:Name="AtcReadyStatus"
+                                                    Grid.Row="0"
+                                                    Grid.Column="0"
+                                                    Margin="2"
+                                                    Padding="5"
+                                                    Background="#1E1E1E"
+                                                    FontSize="10"
+                                                    Foreground="#E0E0E0"
+                                                    Text="준비: 대기" />
 
-                                                <TextBlock Grid.Row="0" Grid.Column="1" 
-                                                           x:Name="AtcRotationStatus" 
-                                                           Text="회전중" 
-                                                           Background="#FFF9C4" Padding="5" 
-                                                           Margin="2" FontSize="10"/>
+                                                <TextBlock
+                                                    x:Name="AtcRotationStatus"
+                                                    Grid.Row="0"
+                                                    Grid.Column="1"
+                                                    Margin="2"
+                                                    Padding="5"
+                                                    Background="#3F3F46"
+                                                    FontSize="10"
+                                                    Foreground="#FDD835"
+                                                    Text="회전중" />
 
-                                                <TextBlock Grid.Row="1" Grid.Column="0" 
-                                                           x:Name="AtcPositionStatus" 
-                                                           Text="위치: IN" 
-                                                           Background="#E3F2FD" Padding="5" 
-                                                           Margin="2" FontSize="10"/>
+                                                <TextBlock
+                                                    x:Name="AtcPositionStatus"
+                                                    Grid.Row="1"
+                                                    Grid.Column="0"
+                                                    Margin="2"
+                                                    Padding="5"
+                                                    Background="#1E1E1E"
+                                                    FontSize="10"
+                                                    Foreground="#42A5F5"
+                                                    Text="위치: IN" />
 
-                                                <TextBlock Grid.Row="1" Grid.Column="1" 
-                                                           x:Name="AtcErrorStatus" 
-                                                           Text="에러: 정상" 
-                                                           Background="#E8F5E9" Padding="5" 
-                                                           Margin="2" FontSize="10"/>
+                                                <TextBlock
+                                                    x:Name="AtcErrorStatus"
+                                                    Grid.Row="1"
+                                                    Grid.Column="1"
+                                                    Margin="2"
+                                                    Padding="5"
+                                                    Background="#1E1E1E"
+                                                    FontSize="10"
+                                                    Foreground="#66BB6A"
+                                                    Text="에러: 정상" />
                                             </Grid>
                                         </StackPanel>
                                     </Border>
                                 </StackPanel>
                             </Border>
 
-                            <!-- 인덱스 제어 -->
-                            <Border Grid.Column="1" BorderBrush="#E0E0E0" 
-                                    BorderThickness="1" CornerRadius="5" 
-                                    Padding="15" Margin="5">
+                            <!--  인덱스 제어  -->
+                            <Border
+                                Grid.Column="1"
+                                Margin="5"
+                                Padding="15"
+                                Background="#2D2D30"
+                                BorderBrush="#3F3F46"
+                                BorderThickness="1"
+                                CornerRadius="5">
                                 <StackPanel>
-                                    <TextBlock Text="인덱스 회전 제어" FontWeight="Bold" 
-                                               Margin="0,0,0,10"/>
+                                    <TextBlock
+                                        Margin="0,0,0,10"
+                                        FontWeight="Bold"
+                                        Foreground="#E0E0E0"
+                                        Text="인덱스 회전 제어" />
 
-                                    <TextBlock Text="인덱스 번호 (1-16)" 
-                                               FontSize="11" Margin="0,0,0,5"/>
+                                    <TextBlock
+                                        Margin="0,0,0,5"
+                                        FontSize="11"
+                                        Foreground="#9E9E9E"
+                                        Text="인덱스 번호 (1-16)" />
 
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="100" />
                                         </Grid.ColumnDefinitions>
 
-                                        <TextBox x:Name="IndexNumberTextBox" 
-                                                 Grid.Column="0" Height="30" 
-                                                 VerticalContentAlignment="Center" 
-                                                 Text="1" Margin="0,0,10,0"/>
+                                        <TextBox
+                                            x:Name="IndexNumberTextBox"
+                                            Grid.Column="0"
+                                            Height="30"
+                                            Margin="0,0,10,0"
+                                            VerticalContentAlignment="Center"
+                                            Background="#1E1E1E"
+                                            BorderBrush="#555555"
+                                            Foreground="#E0E0E0"
+                                            Text="1" />
 
-                                        <Button Grid.Column="1" Content="실행" 
-                                                Height="30" Background="#4CAF50" 
-                                                Foreground="White" 
-                                                Click="IndexRotateButton_Click"/>
+                                        <Button
+                                            Grid.Column="1"
+                                            Height="30"
+                                            Background="#43A047"
+                                            BorderBrush="#43A047"
+                                            Click="IndexRotateButton_Click"
+                                            Content="실행"
+                                            Foreground="White" />
                                     </Grid>
 
-                                    <Border Background="#F5F5F5" CornerRadius="5" 
-                                            Padding="10" Margin="0,20,0,0">
+                                    <Border
+                                        Margin="0,20,0,0"
+                                        Padding="10"
+                                        Background="#1E1E1E"
+                                        BorderBrush="#3F3F46"
+                                        BorderThickness="1"
+                                        CornerRadius="5">
                                         <StackPanel>
-                                            <TextBlock Text="현재 상태" FontSize="11" 
-                                                       Foreground="Gray" Margin="0,0,0,10"/>
+                                            <TextBlock
+                                                Margin="0,0,0,10"
+                                                FontSize="11"
+                                                Foreground="#9E9E9E"
+                                                Text="현재 상태" />
 
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
                                                 </Grid.ColumnDefinitions>
                                                 <Grid.RowDefinitions>
-                                                    <RowDefinition Height="Auto"/>
-                                                    <RowDefinition Height="Auto"/>
-                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
                                                 </Grid.RowDefinitions>
 
-                                                <TextBlock Grid.Row="0" Grid.Column="0" 
-                                                           Text="요청 번호 (D1011):" 
-                                                           FontSize="11" Margin="0,3"/>
-                                                <TextBlock Grid.Row="0" Grid.Column="1" 
-                                                           x:Name="RequestedIndexText" 
-                                                           Text="0" FontWeight="Bold" 
-                                                           FontSize="11" Margin="10,3" 
-                                                           HorizontalAlignment="Right"/>
+                                                <TextBlock
+                                                    Grid.Row="0"
+                                                    Grid.Column="0"
+                                                    Margin="0,3"
+                                                    FontSize="11"
+                                                    Foreground="#9E9E9E"
+                                                    Text="요청 번호 (D1011):" />
+                                                <TextBlock
+                                                    x:Name="RequestedIndexText"
+                                                    Grid.Row="0"
+                                                    Grid.Column="1"
+                                                    Margin="10,3"
+                                                    HorizontalAlignment="Right"
+                                                    FontSize="11"
+                                                    FontWeight="Bold"
+                                                    Foreground="#E0E0E0"
+                                                    Text="0" />
 
-                                                <TextBlock Grid.Row="1" Grid.Column="0" 
-                                                           Text="현재 번호 (D1002):" 
-                                                           FontSize="11" Margin="0,3"/>
-                                                <TextBlock Grid.Row="1" Grid.Column="1" 
-                                                           x:Name="CurrentIndexText" 
-                                                           Text="0" FontWeight="Bold" 
-                                                           FontSize="11" Margin="10,3" 
-                                                           HorizontalAlignment="Right"/>
+                                                <TextBlock
+                                                    Grid.Row="1"
+                                                    Grid.Column="0"
+                                                    Margin="0,3"
+                                                    FontSize="11"
+                                                    Foreground="#9E9E9E"
+                                                    Text="현재 번호 (D1002):" />
+                                                <TextBlock
+                                                    x:Name="CurrentIndexText"
+                                                    Grid.Row="1"
+                                                    Grid.Column="1"
+                                                    Margin="10,3"
+                                                    HorizontalAlignment="Right"
+                                                    FontSize="11"
+                                                    FontWeight="Bold"
+                                                    Foreground="#E0E0E0"
+                                                    Text="0" />
 
-                                                <TextBlock Grid.Row="2" Grid.Column="0" 
-                                                           Text="출력 제결 (D1001):" 
-                                                           FontSize="11" Margin="0,3"/>
-                                                <TextBlock Grid.Row="2" Grid.Column="1" 
-                                                           x:Name="OutputStatusText" 
-                                                           Text="0000000000000000" 
-                                                           FontFamily="Consolas" 
-                                                           FontSize="10" Margin="10,3" 
-                                                           HorizontalAlignment="Right"/>
+                                                <TextBlock
+                                                    Grid.Row="2"
+                                                    Grid.Column="0"
+                                                    Margin="0,3"
+                                                    FontSize="11"
+                                                    Foreground="#9E9E9E"
+                                                    Text="출력 제결 (D1001):" />
+                                                <TextBlock
+                                                    x:Name="OutputStatusText"
+                                                    Grid.Row="2"
+                                                    Grid.Column="1"
+                                                    Margin="10,3"
+                                                    HorizontalAlignment="Right"
+                                                    FontFamily="Consolas"
+                                                    FontSize="10"
+                                                    Foreground="#42A5F5"
+                                                    Text="0000000000000000" />
                                             </Grid>
                                         </StackPanel>
                                     </Border>
