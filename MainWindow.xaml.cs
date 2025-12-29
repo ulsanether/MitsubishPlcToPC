@@ -114,7 +114,7 @@ namespace MitsubishiPlcToPC
             {
                 plc.ActLogicalStationNumber = int.Parse(settings.StationNumber);
                 int result = plc.Open();
-
+                MessageBox.Show(result.ToString());
                 if (result == 0)
                 {
                     StatusIndicator.Fill = new SolidColorBrush(Colors.Green);
